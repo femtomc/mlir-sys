@@ -7,7 +7,6 @@ description = "Rust bindings to the MLIR C API."
 repository = "https://github.com/femtomc/mlir-sys"
 readme = "README.md"
 links = "MLIR"
-license = "MIT"
 license-file = "LICENSE"
 
 [build-dependencies]
