@@ -1,8 +1,14 @@
 [package]
 name = "mlir-sys"
 version = "0.1.0"
+authors = ["McCoy R. Becker"]
 edition = "2018"
+description = "Rust bindings to the MLIR C API."
+repository = "https://github.com/femtomc/mlir-sys"
+readme = "README.md"
 links = "MLIR"
+license = "MIT"
+license-file = "LICENSE"
 
 [build-dependencies]
 bindgen = "0.59.1"
