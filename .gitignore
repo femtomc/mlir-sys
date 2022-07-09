@@ -1,9 +1,1 @@
-/target
-**/*.rs.bk
-Cargo.lock
-bin/
-pkg/
-wasm-pack.log
-.stack-work
-*~
-.history
+target

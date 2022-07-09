@@ -1,15 +1,6 @@
-/*
-
-   This file is part of mlir-sys. License is MIT.
-
-*/
-
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
-#![allow(deref_nullptr)]
-#![allow(unused_must_use)]
-#![allow(dead_code)]
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
@@ -28,22 +19,26 @@ mod mlir_tests {
     }
 
     #[test]
-    fn test_stringref() {
+    fn create_string() {
         unsafe {
-            let c_to_print = CString::new("Hello, world!").expect("CString::new failed");
-            let r = mlirStringRefCreateFromCString(c_to_print.as_ptr());
+            let string = CString::new("Hello, world!").unwrap();
+
+            mlirStringRefCreateFromCString(string.as_ptr());
         }
     }
 
     #[test]
     fn test_location() {
         unsafe {
-            let ctx = mlirContextCreate();
-            mlirRegisterAllDialects(ctx);
-            let loc = mlirLocationUnknownGet(ctx);
-            let c_to_print = CString::new("newmod").expect("CString::new failed");
-            let r = mlirStringRefCreateFromCString(c_to_print.as_ptr());
-            let opstate = mlirOperationStateGet(r, loc);
+            let context = mlirContextCreate();
+
+            mlirRegisterAllDialects(context);
+
+            let location = mlirLocationUnknownGet(context);
+            let string = CString::new("newmod").unwrap();
+            let reference = mlirStringRefCreateFromCString(string.as_ptr());
+
+            mlirOperationStateGet(reference, location);
         }
     }
 }
