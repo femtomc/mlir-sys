@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: tools/setup.sh
-      - run: cargo clippy
+      - run: cargo clippy -- -D warnings
   format:
     runs-on: ubuntu-latest
     steps:
