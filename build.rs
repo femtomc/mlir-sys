@@ -35,18 +35,16 @@ fn run() -> Result<(), Box<dyn Error>> {
                     .iter()
                     .any(|pattern| name.contains(pattern))
         {
-            println!(
-                "cargo:rustc-link-lib=static={}",
-                name.trim_start_matches("lib").trim_end_matches(".a")
-            );
+            if let Some(name) = trim_library_name(&name) {
+                println!("cargo:rustc-link-lib=static={}", name);
+            }
         }
     }
 
     for name in llvm_config("--libnames")?.trim().split(' ') {
-        println!(
-            "cargo:rustc-link-lib={}",
-            name.trim_start_matches("lib").trim_end_matches(".a")
-        );
+        if let Some(name) = trim_library_name(name) {
+            println!("cargo:rustc-link-lib={}", name);
+        }
     }
 
     for flag in llvm_config("--system-libs")?.trim().split(' ') {
@@ -91,4 +89,12 @@ fn llvm_config(argument: &str) -> Result<String, Box<dyn Error>> {
     )?
     .trim()
     .to_string())
+}
+
+fn trim_library_name(name: &str) -> Option<&str> {
+    if let Some(name) = name.strip_prefix("lib") {
+        name.strip_suffix(".a")
+    } else {
+        None
+    }
 }
