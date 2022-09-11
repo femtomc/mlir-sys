@@ -5,41 +5,27 @@ on:
       - main
   pull_request:
 jobs:
-  # TODO Enable this when LLVM 15 is available in Homebrew.
-  # test:
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       os:
-  #         - ubuntu-22.04
-  #         - macos-12
-  #   runs-on: ${{ matrix.os }}
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - run: tools/setup.sh
-  #     - run: cargo test
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - run: tools/setup.sh
-  #     - run: cargo clippy -- -D warnings
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+          # TODO Enable this when LLVM 15 is available in Homebrew.
+          # - macos-12
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: tools/setup.sh
+      - run: cargo test
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: tools/setup.sh
+      - run: cargo clippy -- -D warnings
   format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: cargo fmt --check
-  test_llvm_15:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v2
-      - run: curl -fsSL https://apt.llvm.org/llvm.sh | sudo bash -s 15 all
-      - run: sudo apt -y install libmlir-15-dev mlir-15-tools
-      - run: PATH=/usr/lib/llvm-15/bin:$PATH cargo test
-  lint_llvm_15:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v2
-      - run: curl -fsSL https://apt.llvm.org/llvm.sh | sudo bash -s 15 all
-      - run: sudo apt -y install libmlir-15-dev mlir-15-tools
-      - run: PATH=/usr/lib/llvm-15/bin:$PATH cargo clippy -- -D warnings
