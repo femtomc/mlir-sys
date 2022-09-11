@@ -30,15 +30,20 @@ mod mlir_tests {
     #[test]
     fn test_location() {
         unsafe {
+            let registry = mlirDialectRegistryCreate();
             let context = mlirContextCreate();
 
-            mlirRegisterAllDialects(context);
+            mlirContextAppendDialectRegistry(context, registry);
+            mlirRegisterAllDialects(registry);
 
             let location = mlirLocationUnknownGet(context);
             let string = CString::new("newmod").unwrap();
             let reference = mlirStringRefCreateFromCString(string.as_ptr());
 
             mlirOperationStateGet(reference, location);
+
+            mlirContextDestroy(context);
+            mlirDialectRegistryDestroy(registry);
         }
     }
 }
