@@ -77,7 +77,13 @@ fn get_system_libcpp() -> Option<&'static str> {
 }
 
 fn llvm_config(argument: &str) -> Result<String, Box<dyn Error>> {
-    let call = format!("llvm-config --link-static {}", argument);
+    let prefix = env::var("MLIR_SYS_150_PREFIX")?;
+    let prefix = Path::new(&prefix);
+    let call = format!(
+        "{} --link-static {}",
+        Path::join(prefix, "bin/llvm-config").display(),
+        argument
+    );
 
     Ok(str::from_utf8(
         &if cfg!(target_os = "windows") {
