@@ -1,7 +1,7 @@
 [package]
 name = "mlir-sys"
-version = "0.1.2"
-authors = ["McCoy R. Becker"]
+version = "0.1.3"
+authors = ["McCoy R. Becker, Yota Toyama"]
 edition = "2021"
 description = "Rust bindings to the MLIR C API."
 repository = "https://github.com/femtomc/mlir-sys"
