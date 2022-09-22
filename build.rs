@@ -94,7 +94,7 @@ fn get_system_libcpp() -> Option<&'static str> {
 
 fn llvm_config(argument: &str) -> Result<String, Box<dyn Error>> {
     let prefix = env::var("MLIR_SYS_150_PREFIX")
-        .map(|path| Path::new("bin").join(path))
+        .map(|path| Path::new(&path).join("bin"))
         .unwrap_or_default();
     let call = format!(
         "{} --link-static {}",
