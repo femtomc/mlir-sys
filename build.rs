@@ -5,14 +5,24 @@ use std::error::Error;
 use std::fs;
 use std::io;
 use std::path::Path;
+use std::process::exit;
 use std::process::Command;
 use std::str;
 
 fn main() {
-    run().unwrap()
+    if let Err(error) = run() {
+        eprintln!("{}", error);
+        exit(1);
+    }
 }
 
 fn run() -> Result<(), Box<dyn Error>> {
+    let version = llvm_config("--version")?;
+
+    if !version.starts_with("15.") {
+        return Err(format!("failed to find correct version of llvm-config: {}", version).into());
+    }
+
     println!("cargo:rerun-if-changed=wrapper.h");
     println!("cargo:rustc-link-search={}", llvm_config("--libdir")?);
 
@@ -77,11 +87,12 @@ fn get_system_libcpp() -> Option<&'static str> {
 }
 
 fn llvm_config(argument: &str) -> Result<String, Box<dyn Error>> {
-    let prefix = env::var("MLIR_SYS_150_PREFIX").unwrap_or_default();
-    let prefix = Path::new(&prefix);
+    let prefix = env::var("MLIR_SYS_150_PREFIX")
+        .map(|path| Path::new("bin").join(path))
+        .unwrap_or_default();
     let call = format!(
         "{} --link-static {}",
-        Path::join(prefix, "bin/llvm-config").display(),
+        prefix.join("llvm-config").display(),
         argument
     );
 
