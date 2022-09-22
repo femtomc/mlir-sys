@@ -9,6 +9,8 @@ use std::process::exit;
 use std::process::Command;
 use std::str;
 
+const LLVM_MAJOR_VERSION: usize = 15;
+
 fn main() {
     if let Err(error) = run() {
         eprintln!("{}", error);
@@ -19,8 +21,12 @@ fn main() {
 fn run() -> Result<(), Box<dyn Error>> {
     let version = llvm_config("--version")?;
 
-    if !version.starts_with("15.") {
-        return Err(format!("failed to find correct version of llvm-config: {}", version).into());
+    if !version.starts_with(&format!("{}.", LLVM_MAJOR_VERSION)) {
+        return Err(format!(
+            "failed to find correct version ({}.x.x) of llvm-config (found {})",
+            LLVM_MAJOR_VERSION, version
+        )
+        .into());
     }
 
     println!("cargo:rerun-if-changed=wrapper.h");
