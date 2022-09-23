@@ -5,14 +5,30 @@ use std::error::Error;
 use std::fs;
 use std::io;
 use std::path::Path;
+use std::process::exit;
 use std::process::Command;
 use std::str;
 
+const LLVM_MAJOR_VERSION: usize = 15;
+
 fn main() {
-    run().unwrap()
+    if let Err(error) = run() {
+        eprintln!("{}", error);
+        exit(1);
+    }
 }
 
 fn run() -> Result<(), Box<dyn Error>> {
+    let version = llvm_config("--version")?;
+
+    if !version.starts_with(&format!("{}.", LLVM_MAJOR_VERSION)) {
+        return Err(format!(
+            "failed to find correct version ({}.x.x) of llvm-config (found {})",
+            LLVM_MAJOR_VERSION, version
+        )
+        .into());
+    }
+
     println!("cargo:rerun-if-changed=wrapper.h");
     println!("cargo:rustc-link-search={}", llvm_config("--libdir")?);
 
@@ -77,7 +93,14 @@ fn get_system_libcpp() -> Option<&'static str> {
 }
 
 fn llvm_config(argument: &str) -> Result<String, Box<dyn Error>> {
-    let call = format!("llvm-config --link-static {}", argument);
+    let prefix = env::var("MLIR_SYS_150_PREFIX")
+        .map(|path| Path::new(&path).join("bin"))
+        .unwrap_or_default();
+    let call = format!(
+        "{} --link-static {}",
+        prefix.join("llvm-config").display(),
+        argument
+    );
 
     Ok(str::from_utf8(
         &if cfg!(target_os = "windows") {
