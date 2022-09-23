@@ -44,12 +44,10 @@ fn run() -> Result<(), Box<dyn Error>> {
         .into_iter()
         .flatten()
     {
-        if name == "libMLIRSupport.a"
-            || name.starts_with("libMLIR")
-                && name.ends_with(".a")
-                && !["Main", "Support"]
-                    .iter()
-                    .any(|pattern| name.contains(pattern))
+        if name.starts_with("libMLIR")
+            && name.ends_with(".a")
+            && !name.contains("Main")
+            && name != "libMLIRSupportIndentedOstream.a"
         {
             if let Some(name) = trim_library_name(&name) {
                 println!("cargo:rustc-link-lib=static={}", name);
@@ -64,7 +62,30 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
 
     for flag in llvm_config("--system-libs")?.trim().split(' ') {
-        println!("cargo:rustc-link-lib={}", flag.trim_start_matches("-l"));
+        let flag = flag.trim_start_matches("-l");
+
+        if flag.starts_with('/') {
+            // llvm-config returns absolute paths for dynamically linked libraries.
+            let path = Path::new(flag);
+
+            println!(
+                "cargo:rustc-link-search={}",
+                path.parent().unwrap().display()
+            );
+            println!(
+                "cargo:rustc-link-lib={}",
+                path.file_name()
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .split_once('.')
+                    .unwrap()
+                    .0
+                    .trim_start_matches("lib")
+            );
+        } else {
+            println!("cargo:rustc-link-lib={}", flag);
+        }
     }
 
     if let Some(name) = get_system_libcpp() {
