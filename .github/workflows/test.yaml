@@ -11,7 +11,7 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          # TODO Enable this when LLVM 15 is available in Homebrew.
+          # TODO Enable tests on macOS.
           # - macos-12
     runs-on: ${{ matrix.os }}
     steps:
@@ -19,7 +19,7 @@ jobs:
       - run: tools/setup.sh
       - run: cargo test
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - run: tools/setup.sh
