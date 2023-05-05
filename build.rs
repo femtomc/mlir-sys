@@ -1,13 +1,13 @@
 extern crate bindgen;
 
-use std::env;
-use std::error::Error;
-use std::fs;
-use std::io;
-use std::path::Path;
-use std::process::exit;
-use std::process::Command;
-use std::str;
+use std::{
+    env,
+    error::Error,
+    fs, io,
+    path::Path,
+    process::{exit, Command},
+    str,
+};
 
 const LLVM_MAJOR_VERSION: usize = 16;
 
