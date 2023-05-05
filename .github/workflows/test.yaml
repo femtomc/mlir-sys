@@ -15,19 +15,21 @@ jobs:
           # - macos-12
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: Swatinem/rust-cache@v2
       - uses: Homebrew/actions/setup-homebrew@master
       - run: tools/setup.sh
       - run: cargo test
   lint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: Swatinem/rust-cache@v2
       - uses: Homebrew/actions/setup-homebrew@master
       - run: tools/setup.sh
       - run: cargo clippy -- -D warnings
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: cargo fmt --check
