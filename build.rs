@@ -1,15 +1,15 @@
 extern crate bindgen;
 
-use std::env;
-use std::error::Error;
-use std::fs;
-use std::io;
-use std::path::Path;
-use std::process::exit;
-use std::process::Command;
-use std::str;
+use std::{
+    env,
+    error::Error,
+    fs, io,
+    path::Path,
+    process::{exit, Command},
+    str,
+};
 
-const LLVM_MAJOR_VERSION: usize = 15;
+const LLVM_MAJOR_VERSION: usize = 16;
 
 fn main() {
     if let Err(error) = run() {
@@ -114,7 +114,7 @@ fn get_system_libcpp() -> Option<&'static str> {
 }
 
 fn llvm_config(argument: &str) -> Result<String, Box<dyn Error>> {
-    let prefix = env::var("MLIR_SYS_150_PREFIX")
+    let prefix = env::var(format!("MLIR_SYS_{}0_PREFIX", LLVM_MAJOR_VERSION))
         .map(|path| Path::new(&path).join("bin"))
         .unwrap_or_default();
     let call = format!(
