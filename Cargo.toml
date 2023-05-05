@@ -1,6 +1,6 @@
 [package]
 name = "mlir-sys"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["McCoy R. Becker, Yota Toyama"]
 edition = "2021"
 description = "Rust bindings to the MLIR C API."
@@ -10,4 +10,4 @@ links = "MLIR"
 license-file = "LICENSE"
 
 [build-dependencies]
-bindgen = "0.60.1"
+bindgen = "0.65.1"
