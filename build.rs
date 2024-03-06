@@ -7,7 +7,7 @@ use std::{
     str,
 };
 
-const LLVM_MAJOR_VERSION: usize = 17;
+const LLVM_MAJOR_VERSION: usize = 18;
 
 fn main() {
     if let Err(error) = run() {
