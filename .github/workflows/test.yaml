@@ -6,43 +6,26 @@ on:
   pull_request:
 jobs:
   test:
-    env:
-      MLIR_SYS_180_PREFIX: /usr/lib/llvm-18/
     strategy:
       fail-fast: false
       matrix:
         os:
           - ubuntu-latest
-          # TODO Enable tests on macOS.
-          # - macos-12
+          - macos-14
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
-      - name: add llvm deb repository
-        uses: myci-actions/add-deb-repo@11
-        with:
-              repo: deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main
-              repo-name: llvm-repo
-              keys-asc: https://apt.llvm.org/llvm-snapshot.gpg.key
-      - name: Install LLVM
-        run: sudo apt-get install llvm-18 llvm-18-dev llvm-18-runtime clang-18 clang-tools-18 lld-18 libpolly-18-dev libmlir-18-dev mlir-18-tools
+      - uses: Homebrew/actions/setup-homebrew@master
+      - run: tools/setup.sh
       - run: cargo test
   lint:
     runs-on: ubuntu-latest
-    env:
-      MLIR_SYS_180_PREFIX: /usr/lib/llvm-18/
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
-      - name: add llvm deb repository
-        uses: myci-actions/add-deb-repo@11
-        with:
-              repo: deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main
-              repo-name: llvm-repo
-              keys-asc: https://apt.llvm.org/llvm-snapshot.gpg.key
-      - name: Install LLVM
-        run: sudo apt-get install llvm-18 llvm-18-dev llvm-18-runtime clang-18 clang-tools-18 lld-18 libpolly-18-dev libmlir-18-dev mlir-18-tools
+      - uses: Homebrew/actions/setup-homebrew@master
+      - run: tools/setup.sh
       - run: cargo clippy -- -D warnings
   format:
     runs-on: ubuntu-latest
