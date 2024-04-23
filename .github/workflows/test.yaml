@@ -11,8 +11,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          # TODO Enable tests on macOS.
-          # - macos-12
+          - macos-14
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
