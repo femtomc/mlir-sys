@@ -15,9 +15,13 @@
 #include <mlir-c/Dialect/MLProgram.h>
 #include <mlir-c/Dialect/Math.h>
 #include <mlir-c/Dialect/MemRef.h>
+#include <mlir-c/Dialect/NVGPU.h>
+#include <mlir-c/Dialect/OpenMP.h>
 #include <mlir-c/Dialect/PDL.h>
 #include <mlir-c/Dialect/Quant.h>
+#include <mlir-c/Dialect/ROCDL.h>
 #include <mlir-c/Dialect/SCF.h>
+#include <mlir-c/Dialect/SPIRV.h>
 #include <mlir-c/Dialect/Shape.h>
 #include <mlir-c/Dialect/SparseTensor.h>
 #include <mlir-c/Dialect/Tensor.h>
@@ -30,4 +34,5 @@
 #include <mlir-c/Pass.h>
 #include <mlir-c/RegisterEverything.h>
 #include <mlir-c/Support.h>
+#include <mlir-c/Target/LLVMIR.h>
 #include <mlir-c/Transforms.h>

@@ -7,7 +7,7 @@ use std::{
     str,
 };
 
-const LLVM_MAJOR_VERSION: usize = 17;
+const LLVM_MAJOR_VERSION: usize = 18;
 
 fn main() {
     if let Err(error) = run() {
@@ -93,7 +93,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     bindgen::builder()
         .header("wrapper.h")
         .clang_arg(format!("-I{}", llvm_config("--includedir")?))
-        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .unwrap()
         .write_to_file(Path::new(&env::var("OUT_DIR")?).join("bindings.rs"))?;
